@@ -1,0 +1,11 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="14" height="14">
+	<title>logo-shopOnline</title>
+	<defs>
+		<image  width="14" height="14" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOAQMAAAAlhr+SAAAAAXNSR0IB2cksfwAAAANQTFRF////p8QbyAAAAA5JREFUeJxjZGBgJA4BAAFlAA9qzP15AAAAAElFTkSuQmCC"/>
+		<image  width="12" height="12" id="img2" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMBAMAAACkW0HUAAAAAXNSR0IB2cksfwAAACdQTFRFGw4PHA0PGwwPHAwOHAsOHAwQGAgQAAAAIAsQIQgIHQwOHQ4PHA0PVP0pXgAAAA10Uk5T3//Pf29AIAAwH4/fvxtkqeYAAABOSURBVHicY2QUYGBgYGQ0fACkmBkDDwApVsaChUBKjLF4HpAyYyydA6TCGCtmAqk2xqrpQEqNsXoakNrG2DgBSHEwLiwAUkyMGxOAFDcAKf0N+4t7lNEAAAAASUVORK5CYII="/>
+	</defs>
+	<style>
+	</style>
+	<use id="Layer 1" href="#img1" x="0" y="0"/>
+	<use id="Background" href="#img2" x="1" y="1"/>
+</svg>
