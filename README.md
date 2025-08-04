@@ -4,6 +4,11 @@
 
 Aplikacja sklepu internetowego z produktami, napisana w React + TypeScript, z obsługą paginacji, wyszukiwania, infinite scroll oraz responsywnym interfejsem.
 
+## Demo online
+
+Aplikację możesz zobaczyć na żywo na Vercel:  
+[https://react-product-store-h34m.vercel.app/](https://react-product-store-h34m.vercel.app/)
+
 ## Funkcje
 
 - Pobieranie produktów z publicznego API [dummyjson.com](https://dummyjson.com/products)
@@ -16,7 +21,9 @@ Aplikacja sklepu internetowego z produktami, napisana w React + TypeScript, z ob
 - Komponentowa architektura (React + Zustand)
 - **Optymalizacja wydajności:**
   - Komponenty sekcji i kart produktów są memoizowane (`React.memo`)
+- Automatyczne ponawianie zapytań HTTP przy błędach sieciowych (`retryFetch`)
 - Pokrycie testami jednostkowymi (Jest + Testing Library)
+- Ikony z biblioteki [Lucide](https://lucide.dev/)
 
 ## Zarządzanie stanem i obsługa produktów
 
@@ -32,11 +39,6 @@ Aplikacja sklepu internetowego z produktami, napisana w React + TypeScript, z ob
   - obsługę błędów,
   - aktualną stronę i informację o dostępności kolejnych produktów,
   - funkcje `fetchProducts` i `setQuery`.
-
-## Demo online
-
-Aplikację możesz zobaczyć na żywo na Vercel:  
-[https://](https://)
 
 ## Instalacja
 
@@ -96,11 +98,11 @@ Mockowane są zasoby statyczne oraz zależności, a testy pokrywają m.in. obsł
 
 ```
 src/
- ├── components/      # Komponenty UI + testy jednostkowe (ProductCard, ProductSection, Header, SearchBar, SkeletonCard, SkeletonTitle)
+ ├── components/      # Komponenty UI + testy jednostkowe
+ ├── config/          # Konfiguracja (api.ts, constants.ts, messages.ts)
  ├── pages/           # Strony (Home) + testy jednostkowe
  ├── services/        # Logika pobierania produktów (productStore.ts) + testy jednostkowe
  ├── utils/           # Narzędzia pomocnicze (retryFetch.ts)
- ├── config/          # Konfiguracja (api.ts, constants.ts, messages.ts)
  ├── types.ts         # Typy TypeScript
  ├── App.tsx
  ├── main.tsx

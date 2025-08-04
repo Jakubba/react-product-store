@@ -9,10 +9,7 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product }, r
   const [loaded, setLoaded] = useState(false)
 
   return (
-    <div
-      ref={ref}
-      className="hover:shadow-md transition max-w-[176px] cursor-pointer rounded-lg p-3 bg-white"
-    >
+    <div ref={ref} className="hover:shadow-md transition  cursor-pointer rounded-lg p-3 bg-white">
       <div className="w-full h-40 bg-[#f3f3f3] rounded-lg mb-4 relative overflow-hidden">
         {!loaded && <div className="absolute inset-0 animate-pulse bg-gray-300 rounded-lg" />}
         <img
