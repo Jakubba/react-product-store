@@ -2,7 +2,7 @@
 
 ![ShopOnline Screenshot](./src/assets/app/demo-app.png)
 
-Aplikacja sklepu internetowego z produktami, napisana w React + TypeScript, z obsługą paginacji, wyszukiwania, infinite scroll oraz responsywnym interfejsem.
+Aplikacja sklepu internetowego z produktami, napisana w React + TypeScript, z obsługą paginacji, wyszukiwania, show more oraz responsywnym interfejsem.
 
 ## Demo online
 
@@ -13,7 +13,7 @@ Aplikację możesz zobaczyć na żywo na Vercel:
 
 - Pobieranie produktów z publicznego API [dummyjson.com](https://dummyjson.com/products)
 - Wyszukiwanie produktów z debounce
-- Paginacja i infinite scroll (ładowanie kolejnych stron przy przewijaniu)
+- Opcja "Show more" – dynamiczne doładowywanie produktów
 - Podział na sekcje: **Featured Products** i **New Arrivals**
 - Skeleton loader podczas ładowania
 - Obsługa błędów i komunikaty dla użytkownika
@@ -29,7 +29,7 @@ Aplikację możesz zobaczyć na żywo na Vercel:
 
 - Stan produktów, paginacji, ładowania i błędów jest zarządzany przez **Zustand** w pliku `src/services/productStore.ts`.
 - Pobieranie produktów obsługuje:
-  - paginację i infinite scroll,
+  - opcja "Show more" – dynamiczne doładowywanie produktów
   - wyszukiwanie z debounce,
   - automatyczne ponawianie zapytań HTTP przy błędach sieciowych (funkcja `retryFetch` z `src/utils/retryFetch.ts`),
   - komunikaty błędów zdefiniowane w `src/config/messages.ts` (np. brak internetu, timeout, błąd ogólny).
@@ -45,7 +45,7 @@ Aplikację możesz zobaczyć na żywo na Vercel:
 1. **Klonuj repozytorium:**
 
    ```bash
-   git clone <adres-repozytorium>
+   git clone https://github.com/Jakubba/react-product-store.git
    cd react-product-store
    ```
 
