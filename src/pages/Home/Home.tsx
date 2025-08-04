@@ -24,7 +24,7 @@ const Home: React.FC = () => {
   }
 
   return (
-    <div className="px-4 sm:px-12 py-6">
+    <div className="px-4 sm:px-12 py-6 pt-20">
       <Header onSearch={handleSearch} searchValue={searchTerm} />
 
       {error && <ErrorRetry error={error} onRetry={() => fetchProducts(true)} />}
