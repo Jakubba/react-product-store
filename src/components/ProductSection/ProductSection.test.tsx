@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { render, screen } from '@testing-library/react'
 import ProductSection from './ProductSection'
-import type { Product } from '../../services/productStore'
+import type { Product } from '../../services/productStore.types'
 
 jest.mock('../ProductCard/ProductCard.tsx', () =>
   React.forwardRef<HTMLDivElement, { product: Product }>((props, ref) => (

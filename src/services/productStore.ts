@@ -1,26 +1,10 @@
 import { create } from 'zustand'
 import { API_BASE } from '../config/api'
-import { PRODUCTS_LIMIT } from '../config/constants'
 import { ERROR_MESSAGES } from '../config/messages'
 import { retryFetch } from '../utils/retryFetch'
-
-export interface Product {
-  id: number
-  title: string
-  price: number
-  thumbnail: string
-}
-
-interface ProductStore {
-  products: Product[]
-  loading: boolean
-  error: string | null
-  page: number
-  hasMore: boolean
-  query: string
-  fetchProducts: (reset?: boolean) => Promise<void>
-  setQuery: (query: string) => void
-}
+import type { Product } from './productStore.types'
+import type { ProductStore } from './productStore.types'
+import { PRODUCTS_LIMIT } from '../config/constants'
 
 export const useProductStore = create<ProductStore>((set, get) => ({
   products: [],
@@ -30,25 +14,29 @@ export const useProductStore = create<ProductStore>((set, get) => ({
   hasMore: true,
   query: '',
   fetchProducts: async (reset = false) => {
-    if (get().loading) return
-    const { query } = get()
+    const { page, query, products } = get()
     set({ loading: true, error: null })
 
     try {
-      let url = API_BASE
+      const skip = reset ? 0 : (page - 1) * PRODUCTS_LIMIT
+      let url = `${API_BASE}?limit=${PRODUCTS_LIMIT}&skip=${skip}`
+
       if (query.trim()) {
-        url = `${API_BASE}/search?q=${encodeURIComponent(query.trim())}`
+        url = `${API_BASE}/search?q=${encodeURIComponent(query.trim())}&limit=${PRODUCTS_LIMIT}&skip=${skip}`
       }
 
       const res = await retryFetch(url)
       const data = await res.json()
       const newProducts: Product[] = data.products || []
+      const combined = reset ? newProducts : [...products, ...newProducts]
+      const unique = Array.from(new Map(combined.map((p) => [p.id, p])).values())
+      const limited = unique.slice(0, 60)
 
       set({
-        products: newProducts,
+        products: limited,
         loading: false,
-        page: 1,
-        hasMore: false,
+        page: reset ? 2 : page + 1,
+        hasMore: limited.length < 60 && newProducts.length === PRODUCTS_LIMIT,
       })
     } catch (error: any) {
       let message = ERROR_MESSAGES.fetchProducts.generic

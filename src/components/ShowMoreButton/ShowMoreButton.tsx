@@ -1,10 +1,5 @@
 import React from 'react'
-
-interface ShowMoreButtonProps {
-  onClick: () => void
-  disabled?: boolean
-}
-
+import type { ShowMoreButtonProps } from './ShowMoreButton.types'
 const ShowMoreButton: React.FC<ShowMoreButtonProps> = ({ onClick, disabled = false }) => {
   return (
     <div className="text-center mt-6">

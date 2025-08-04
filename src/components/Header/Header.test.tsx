@@ -1,72 +1,36 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { act } from 'react'
+import React from 'react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import Header from './Header'
 
-jest.useFakeTimers()
+jest.mock('../SearchBar/SearchBar', () => ({ onSearch, searchValue }: any) => (
+  <input data-testid="search-bar" value={searchValue} onChange={(e) => onSearch(e.target.value)} />
+))
 
 describe('Header', () => {
-  it('renderuje logo, tytuł oraz pasek wyszukiwania', () => {
-    const onSearchMock = jest.fn()
+  it('renders logo image and title', () => {
+    render(<Header onSearch={() => {}} searchValue="" />)
 
-    render(<Header onSearch={onSearchMock} />)
-
-    const logoImage = screen.getByAltText(/logo image/i)
+    // Logo jest widoczne i ma poprawny alt
+    const logoImage = screen.getByAltText('logo image')
     expect(logoImage).toBeInTheDocument()
 
-    const title = screen.getByText(/ShopOnline/i)
+    // Tytuł jest widoczny na większych ekranach
+    const title = screen.getByText('ShopOnline')
     expect(title).toBeInTheDocument()
-
-    const searchInput = screen.getByRole('textbox')
-    expect(searchInput).toBeInTheDocument()
   })
 
-  it('wywołuje onSearch po debounce, gdy użytkownik wpisuje tekst', async () => {
+  it('passes props to SearchBar and reacts to input changes', () => {
     const onSearchMock = jest.fn()
+    const searchValue = 'test value'
 
-    render(<Header onSearch={onSearchMock} />)
+    render(<Header onSearch={onSearchMock} searchValue={searchValue} />)
 
-    const searchInput = screen.getByRole('textbox')
+    const searchInput = screen.getByTestId('search-bar')
+    expect(searchInput).toHaveValue(searchValue)
 
-    // symulujemy wpisanie tekstu w pole wyszukiwania
-    fireEvent.change(searchInput, { target: { value: 'test product' } })
+    // Symulujemy zmianę inputa
+    fireEvent.change(searchInput, { target: { value: 'new value' } })
 
-    // na początku funkcja onSearch nie powinna być wywołana (debounce)
-    expect(onSearchMock).not.toHaveBeenCalled()
-
-    // przesuwamy czas o 500ms (czas debounce)
-    act(() => {
-      jest.advanceTimersByTime(500)
-    })
-
-    // czekamy aż onSearch zostanie wywołana z podanym tekstem
-    await waitFor(() => {
-      expect(onSearchMock).toHaveBeenCalledWith('test product')
-    })
-  })
-
-  it('wywołuje onSearch, gdy użytkownik szybko wpisuje tekst, a potem naciska Enter', async () => {
-    const onSearchMock = jest.fn()
-
-    render(<Header onSearch={onSearchMock} />)
-
-    const searchInput = screen.getByRole('textbox')
-
-    // wpisujemy tekst
-    fireEvent.change(searchInput, { target: { value: 'new product' } })
-    // symulujemy naciśnięcie klawisza Enter
-    fireEvent.keyDown(searchInput, { key: 'Enter', code: 'Enter' })
-
-    // przesuwamy czas o 500ms
-    act(() => {
-      jest.advanceTimersByTime(500)
-    })
-
-    // czekamy na wywołanie onSearch z wpisanym tekstem
-    await waitFor(() => {
-      expect(onSearchMock).toHaveBeenCalledWith('new product')
-    })
-
-    // sprawdzamy, że onSearch został wywołany dokładnie 1 raz
-    expect(onSearchMock).toHaveBeenCalledTimes(1)
+    expect(onSearchMock).toHaveBeenCalledWith('new value')
   })
 })

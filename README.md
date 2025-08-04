@@ -7,7 +7,7 @@ Aplikacja sklepu internetowego z produktami, napisana w React + TypeScript, z ob
 ## Demo online
 
 Aplikację możesz zobaczyć na żywo na Vercel:  
-[https://react-product-store-h34m.vercel.app/](https://react-product-store-h34m.vercel.app/)
+[https://react-product-store-j61u.vercel.app/](https://react-product-store-j61u.vercel.app/)
 
 ## Funkcje
 
@@ -98,12 +98,11 @@ Mockowane są zasoby statyczne oraz zależności, a testy pokrywają m.in. obsł
 
 ```
 src/
- ├── components/      # Komponenty UI + testy jednostkowe
+ ├── components/      # Komponenty UI + testy jednostkowe + typy, interface TypeScript
  ├── config/          # Konfiguracja (api.ts, constants.ts, messages.ts)
  ├── pages/           # Strony (Home) + testy jednostkowe
- ├── services/        # Logika pobierania produktów (productStore.ts) + testy jednostkowe
+ ├── services/        # Logika pobierania produktów (productStore.ts) + testy jednostkowe + typy, interface TypeScript
  ├── utils/           # Narzędzia pomocnicze (retryFetch.ts)
- ├── types.ts         # Typy TypeScript
  ├── App.tsx
  ├── main.tsx
  └── index.css

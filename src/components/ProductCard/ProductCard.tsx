@@ -1,5 +1,5 @@
 import React, { forwardRef, useState } from 'react'
-import type { Product } from '../../services/productStore'
+import type { Product } from '../../services/productStore.types'
 
 interface ProductCardProps {
   product: Product

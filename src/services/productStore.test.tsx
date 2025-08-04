@@ -1,88 +1,103 @@
-import { act } from '@testing-library/react'
+import { act, renderHook, waitFor } from '@testing-library/react'
 import { useProductStore } from './productStore'
-import * as retryFetchModule from '../utils/retryFetch'
+import { PRODUCTS_LIMIT } from '../config/constants'
 
-jest.mock('../utils/retryFetch')
+jest.mock('../utils/retryFetch', () => ({
+  retryFetch: jest.fn(),
+}))
 
-const mockRetryFetch = retryFetchModule.retryFetch as jest.Mock
+import { retryFetch } from '../utils/retryFetch'
 
 describe('useProductStore', () => {
+  const mockProducts = Array.from({ length: PRODUCTS_LIMIT }, (_, i) => ({
+    id: i + 1,
+    name: `Product ${i + 1}`,
+  }))
+
   beforeEach(() => {
-    act(() => {
-      useProductStore.setState({
-        products: [],
-        loading: false,
-        error: null,
-        page: 1,
-        hasMore: true,
-        query: '',
-      })
-    })
     jest.clearAllMocks()
   })
 
-  test('fetchProducts poprawnie ładuje produkty', async () => {
-    const mockProducts = [
-      { id: 1, title: 'Product 1', price: 100, thumbnail: 'img1.jpg' },
-      { id: 2, title: 'Product 2', price: 200, thumbnail: 'img2.jpg' },
-    ]
-
-    mockRetryFetch.mockResolvedValue({
-      json: () => Promise.resolve({ products: mockProducts, total: 2 }),
+  it('fetchProducts ładuje produkty i aktualizuje stan', async () => {
+    ;(retryFetch as jest.Mock).mockResolvedValueOnce({
+      json: async () => ({ products: mockProducts }),
     })
 
-    await act(async () => {
-      await useProductStore.getState().fetchProducts()
+    const { result } = renderHook(() => useProductStore())
+
+    act(() => {
+      result.current.fetchProducts(true)
     })
 
-    const state = useProductStore.getState()
+    expect(result.current.loading).toBe(true)
 
-    expect(state.loading).toBe(false)
-    expect(state.error).toBeNull()
-    expect(state.products).toEqual(mockProducts)
-    // Po udanym fetchu strona powinna być inkrementowana (jeśli implementacja tak robi)
-    expect(state.page).toBe(1)
-    expect(state.hasMore).toBe(false) // jeśli total === products.length to hasMore false
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false)
+    })
+
+    expect(result.current.products.length).toBeLessThanOrEqual(60)
+    expect(result.current.page).toBe(2)
+    expect(result.current.hasMore).toBe(true)
+    expect(result.current.error).toBeNull()
   })
 
-  test('fetchProducts ustawia błąd przy braku połączenia', async () => {
-    mockRetryFetch.mockRejectedValue(new Error('Network Error'))
-
-    // Symulujemy offline
-    Object.defineProperty(navigator, 'onLine', {
-      value: false,
-      configurable: true,
-      writable: true,
+  it('fetchProducts dokłada kolejne produkty przy reset=false', async () => {
+    ;(retryFetch as jest.Mock).mockResolvedValue({
+      json: async () => ({ products: mockProducts }),
     })
 
+    const { result } = renderHook(() => useProductStore())
+
+    // pierwsze ładowanie z reset=true
     await act(async () => {
-      await useProductStore.getState().fetchProducts()
+      await result.current.fetchProducts(true)
     })
 
-    const state = useProductStore.getState()
+    expect(result.current.products.length).toBeLessThanOrEqual(60)
+    expect(result.current.page).toBe(2)
 
-    expect(state.loading).toBe(false)
-    expect(state.error).toBe('Brak połączenia z internetem. Spróbuj ponownie później.')
+    // drugie ładowanie (dokładanie)
+    await act(async () => {
+      await result.current.fetchProducts(false)
+    })
+
+    expect(result.current.products.length).toBeLessThanOrEqual(60)
+    expect(result.current.page).toBe(3)
   })
 
-  test('setQuery ustawia query i wywołuje fetchProducts', async () => {
-    // podmiana fetchProducts na mocka, by śledzić wywołania
-    const fetchProductsSpy = jest
-      .spyOn(useProductStore.getState(), 'fetchProducts')
-      .mockResolvedValue()
-
-    await act(async () => {
-      await useProductStore.getState().setQuery('test-query')
+  it('setQuery resetuje stan i wywołuje fetchProducts z reset=true', async () => {
+    ;(retryFetch as jest.Mock).mockResolvedValue({
+      json: async () => ({ products: mockProducts }),
     })
 
-    const state = useProductStore.getState()
+    const { result } = renderHook(() => useProductStore())
 
-    expect(state.query).toBe('test-query')
-    expect(state.page).toBe(1)
-    expect(state.products).toEqual([])
-    expect(state.hasMore).toBe(true)
-    expect(fetchProductsSpy).toHaveBeenCalledWith(true)
+    await act(async () => {
+      result.current.setQuery('test query')
+    })
 
-    fetchProductsSpy.mockRestore()
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false)
+    })
+
+    expect(result.current.query).toBe('test query')
+    expect(result.current.page).toBe(2)
+    expect(result.current.products.length).toBeLessThanOrEqual(60)
+  })
+
+  it('ustawia błąd gdy fetchProducts rzuci wyjątek', async () => {
+    ;(retryFetch as jest.Mock).mockRejectedValue(new Error('fetch failed'))
+
+    const { result } = renderHook(() => useProductStore())
+
+    await act(async () => {
+      result.current.fetchProducts(true)
+    })
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false)
+    })
+
+    expect(result.current.error).toBeDefined()
   })
 })

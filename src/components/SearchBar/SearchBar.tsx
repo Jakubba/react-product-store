@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Search } from 'lucide-react'
+import type { SearchBarProps } from './SearchBar.types'
 
-interface SearchBarProps {
-  onSearch: (value: string) => void
-}
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [value, setValue] = useState('')
 

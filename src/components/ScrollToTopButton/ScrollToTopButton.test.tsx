@@ -16,7 +16,7 @@ describe('ScrollToTopButton', () => {
 
     const button = screen.getByRole('button', { name: /scroll to top/i })
 
-    // Oczekujemy, że przycisk będzie niewidoczny na początku (klasa opacity-0 i pointer-events-none)
+    // Oczekujemy, że przycisk będzie niewidoczny na początku
     expect(button).toHaveClass('opacity-0 pointer-events-none')
   })
 
@@ -29,7 +29,7 @@ describe('ScrollToTopButton', () => {
 
     const button = screen.getByRole('button', { name: /scroll to top/i })
 
-    // Oczekujemy, że przycisk stanie się widoczny (klasa opacity-100)
+    // Oczekujemy, że przycisk stanie się widoczny
     expect(button).toHaveClass('opacity-100')
   })
 

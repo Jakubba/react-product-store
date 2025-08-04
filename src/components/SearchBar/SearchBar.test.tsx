@@ -6,7 +6,7 @@ jest.useFakeTimers()
 
 describe('SearchBar', () => {
   it('renderuje pole wyszukiwania i ikonę', () => {
-    render(<SearchBar onSearch={() => {}} />)
+    render(<SearchBar onSearch={() => {}} searchValue="" />)
 
     const input = screen.getByRole('textbox', {
       name: /search for products/i,
@@ -18,7 +18,7 @@ describe('SearchBar', () => {
 
   it('wywołuje onSearch z opóźnieniem po wpisaniu tekstu', async () => {
     const onSearchMock = jest.fn()
-    render(<SearchBar onSearch={onSearchMock} />)
+    render(<SearchBar onSearch={onSearchMock} searchValue="example" />)
 
     const input = screen.getByRole('textbox')
 
@@ -37,7 +37,7 @@ describe('SearchBar', () => {
 
   it('czyści poprzedni timeout przy szybkim wpisywaniu', () => {
     const onSearchMock = jest.fn()
-    render(<SearchBar onSearch={onSearchMock} />)
+    render(<SearchBar onSearch={onSearchMock} searchValue="example" />)
 
     const input = screen.getByRole('textbox')
 

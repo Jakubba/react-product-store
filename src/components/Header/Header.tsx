@@ -1,12 +1,9 @@
 import React from 'react'
 import SearchBar from '../SearchBar/SearchBar'
 import logo from './../../assets/image/logo-shopOnline.png'
+import type { HeaderProps } from './Header.types'
 
-interface HeaderProps {
-  onSearch: (value: string) => void
-}
-
-const Header: React.FC<HeaderProps> = ({ onSearch }) => {
+const Header: React.FC<HeaderProps> = ({ onSearch, searchValue }) => {
   return (
     <div className="flex items-center justify-between  py-4 border-b border-gray-200 md:px-4 sm:px-10">
       <div className="flex items-center gap-4">
@@ -15,7 +12,7 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
           ShopOnline
         </h1>
       </div>
-      <SearchBar onSearch={onSearch} />
+      <SearchBar onSearch={onSearch}  searchValue={searchValue} />
     </div>
   )
 }
